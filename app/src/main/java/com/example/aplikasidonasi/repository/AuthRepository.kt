@@ -1,20 +1,19 @@
 package com.example.aplikasidonasi.repository
 
-import com.example.aplikasidonasi.apiservice.ApiService
+import com.example.aplikasidonasi.apiservice.ApiConfig
+import com.example.aplikasidonasi.model.Login
 import com.example.aplikasidonasi.model.User
-import com.example.aplikasidonasi.model.request.LoginRequest
-import com.example.aplikasidonasi.model.request.RegisterRequest
-import com.example.aplikasidonasi.model.response.LoginResponse
-import com.example.aplikasidonasi.model.response.RegisterResponse
 
-class AuthRepository(
-    private val apiService: ApiService
-) {
-    suspend fun login(request: LoginRequest): User {
-        return apiService.login(request)
+class AuthRepository {
+
+    private val apiService = ApiConfig.getApiService()
+
+    suspend fun login(email: String, password: String): User {
+        val loginData = Login(email, password)
+        return apiService.login(loginData)
     }
 
-    suspend fun register(request: RegisterRequest): User {
-        return apiService.register(request)
+    suspend fun register(user: User): User {
+        return apiService.register(user)
     }
 }
