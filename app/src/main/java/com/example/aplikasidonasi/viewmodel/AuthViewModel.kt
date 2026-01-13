@@ -27,4 +27,23 @@ class AuthViewModel(
             }
         }
     }
+    fun register(
+        nama: String,
+        email: String,
+        password: String
+    ) {
+        viewModelScope.launch {
+            try {
+                _user.value = repository.register(
+                    User(
+                        nama = nama,
+                        email = email,
+                        password = password
+                    )
+                )
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
+        }
+    }
 }
