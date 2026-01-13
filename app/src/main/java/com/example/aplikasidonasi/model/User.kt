@@ -1,8 +1,9 @@
 package com.example.aplikasidonasi.model
 
 data class User(
-    val user_id: Int,
+    val id: Int = 0,
     val nama: String,
     val email: String,
-    val role: String
+    val password: String = "",
+    val role: String = "user"
 )
