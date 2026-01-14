@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,7 +28,8 @@ import com.example.aplikasidonasi.viewmodel.AuthViewModel
 @Composable
 fun HalamanLogin(
     authViewModel: AuthViewModel,
-    onLoginSuccess: (User) -> Unit
+    onLoginSuccess: (User) -> Unit,
+    onRegisterClick: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -35,11 +37,8 @@ fun HalamanLogin(
     val user by authViewModel.user.observeAsState()
     val error by authViewModel.error.observeAsState()
 
-    // Jika login berhasil
     LaunchedEffect(user) {
-        user?.let {
-            onLoginSuccess(it)
-        }
+        user?.let { onLoginSuccess(it) }
     }
 
     Column(
@@ -49,31 +48,39 @@ fun HalamanLogin(
         verticalArrangement = Arrangement.Center
     ) {
 
-        Text("Login")
+        Text("Login", style = MaterialTheme.typography.headlineSmall)
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") }
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") }
+            label = { Text("Password") },
+            modifier = Modifier.fillMaxWidth()
         )
 
-        Button(onClick = {
-            authViewModel.login(email, password)
-        }) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { authViewModel.login(email, password) }
+        ) {
             Text("Login")
         }
 
+        TextButton(onClick = onRegisterClick) {
+            Text("Belum punya akun? Register")
+        }
+
         error?.let {
-            Text(
-                text = it,
-                color = MaterialTheme.colorScheme.error
-            )
+            Text(it, color = MaterialTheme.colorScheme.error)
         }
     }
 }
