@@ -9,8 +9,9 @@ class AuthRepository {
     private val apiService = ApiConfig.getApiService()
 
     suspend fun login(email: String, password: String): User {
-        val loginData = Login(email, password)
-        return apiService.login(loginData)
+        val user = apiService.login(Login(email, password))
+
+        return user ?: throw Exception("Email atau password salah")
     }
 
     suspend fun register(user: User): User {

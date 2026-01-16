@@ -58,7 +58,8 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.lifecycle.runtime.compose)
 
-
+    implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.compose.material:material-icons-extended")
 
         // Retrofit
     implementation(libs.retrofit.serialization)
@@ -66,11 +67,25 @@ dependencies {
         // OkHttp
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     // Lifecycle & ViewModel
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.compose.runtime.livedata)
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.compose.runtime)
+    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.runtime)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.aplikasidonasi.model.User
 import com.example.aplikasidonasi.viewmodel.AuthViewModel
 
@@ -38,7 +39,9 @@ fun HalamanLogin(
     val error by authViewModel.error.observeAsState()
 
     LaunchedEffect(user) {
-        user?.let { onLoginSuccess(it) }
+        user?.let {
+            onLoginSuccess(it)
+        }
     }
 
     Column(
