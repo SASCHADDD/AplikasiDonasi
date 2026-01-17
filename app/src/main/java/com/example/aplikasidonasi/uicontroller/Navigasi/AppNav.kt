@@ -13,6 +13,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.aplikasidonasi.view.admin.AdminHomeScreen
+import com.example.aplikasidonasi.view.admin.AdminTambahTempatDonasiScreen
 import com.example.aplikasidonasi.view.auth.HalamanLogin
 import com.example.aplikasidonasi.view.auth.HalamanRegister
 import com.example.aplikasidonasi.view.user.HalamanDetailDonasi
@@ -37,6 +39,7 @@ fun DonasiApp() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val role by authViewModel.role.collectAsState()
 
     Scaffold(
         topBar = {
@@ -66,9 +69,15 @@ fun DonasiApp() {
             composable(PetaNavigasi.LOGIN) {
                 HalamanLogin(
                     authViewModel = authViewModel,
-                    onLoginSuccess = {
-                        navController.navigate(PetaNavigasi.HOME) {
-                            popUpTo(PetaNavigasi.LOGIN) { inclusive = true }
+                    onLoginSuccess = { role ->
+                        when (role) {
+                            "admin" -> navController.navigate(PetaNavigasi.ADMIN_HOME) {
+                                popUpTo(PetaNavigasi.LOGIN) { inclusive = true }
+                            }
+
+                            else -> navController.navigate(PetaNavigasi.HOME) {
+                                popUpTo(PetaNavigasi.LOGIN) { inclusive = true }
+                            }
                         }
                     },
                     onRegisterClick = {
@@ -81,10 +90,9 @@ fun DonasiApp() {
                 HalamanRegister(
                     authViewModel = authViewModel,
                     onRegisterSuccess = {
-                        navController.popBackStack()
-                    },
-                    onBackToLogin = {
-                        navController.popBackStack()
+                        navController.navigate(PetaNavigasi.LOGIN) {
+                            popUpTo(PetaNavigasi.REGISTER) { inclusive = true }
+                        }
                     }
                 )
             }
@@ -107,9 +115,7 @@ fun DonasiApp() {
                 HalamanDetailDonasi(
                     id = id,
                     onDonasiClick = { donasiId ->
-                        navController.navigate(
-                            PetaNavigasi.kirimDonasiRoute(donasiId)
-                        )
+                        navController.navigate(PetaNavigasi.kirimDonasiRoute(donasiId))
                     }
                 )
             }
@@ -119,7 +125,6 @@ fun DonasiApp() {
                 arguments = listOf(navArgument("id") { type = NavType.IntType })
             ) { backStackEntry ->
                 val id = backStackEntry.arguments?.getInt("id") ?: return@composable
-
                 HalamanKirimDonasi(
                     token = token,
                     donasiId = id,
@@ -131,6 +136,23 @@ fun DonasiApp() {
                 HalamanRiwayatDonasi(
                     token = token ?: return@composable,
                     paddingValues = paddingValues
+                )
+            }
+
+            composable(PetaNavigasi.ADMIN_HOME) {
+                AdminHomeScreen(
+                    paddingValues = paddingValues,
+                    onAddClick = {
+                        navController.navigate(PetaNavigasi.ADMIN_TAMBAH_DONASI)
+                    },
+                    onItemClick = {}
+                )
+            }
+
+            composable(PetaNavigasi.ADMIN_TAMBAH_DONASI) {
+                AdminTambahTempatDonasiScreen(
+                    token = token,
+                    onBack = { navController.popBackStack() }
                 )
             }
         }

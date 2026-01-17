@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -23,24 +24,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.example.aplikasidonasi.model.User
 import com.example.aplikasidonasi.viewmodel.AuthViewModel
 
 @Composable
 fun HalamanLogin(
     authViewModel: AuthViewModel,
-    onLoginSuccess: (User) -> Unit,
+    onLoginSuccess: (String?) -> Unit,
     onRegisterClick: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val user by authViewModel.user.observeAsState()
-    val error by authViewModel.error.observeAsState()
+    val role by authViewModel.role.collectAsState()
+    val token by authViewModel.token.collectAsState()
+    val error by authViewModel.error.collectAsState() // ⬅️ INI WAJIB
 
-    LaunchedEffect(user) {
-        user?.let {
-            onLoginSuccess(it)
+    LaunchedEffect(token) {
+        if (token != null) {
+            onLoginSuccess(role) // role
         }
     }
 
@@ -61,6 +62,8 @@ fun HalamanLogin(
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth()
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = password,
@@ -83,6 +86,7 @@ fun HalamanLogin(
         }
 
         error?.let {
+            Spacer(modifier = Modifier.height(8.dp))
             Text(it, color = MaterialTheme.colorScheme.error)
         }
     }

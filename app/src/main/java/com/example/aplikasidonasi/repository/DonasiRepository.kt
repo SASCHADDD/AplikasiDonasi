@@ -6,6 +6,7 @@ import com.example.aplikasidonasi.model.TempatDonasi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
 class DonasiRepository {
@@ -64,5 +65,21 @@ class DonasiRepository {
     }
     suspend fun getRiwayatDonasi(token: String): List<RiwayatDonasi> {
         return apiService.getRiwayatDonasi("Bearer $token")
+    }
+
+    suspend fun tambahTempatDonasi(
+        token: String,
+        nama: RequestBody,
+        deskripsi: RequestBody,
+        target: RequestBody,
+        foto: MultipartBody.Part
+    ) {
+        apiService.tambahTempatDonasi(
+            token = "Bearer $token",
+            nama = nama,
+            deskripsi = deskripsi,
+            target = target,
+            foto = foto
+        )
     }
 }

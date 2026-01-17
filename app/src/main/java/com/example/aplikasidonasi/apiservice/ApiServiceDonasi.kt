@@ -1,12 +1,12 @@
 package com.example.aplikasidonasi.apiservice
 
 import com.example.aplikasidonasi.model.Login
+import com.example.aplikasidonasi.model.LoginResponse
 import com.example.aplikasidonasi.model.RiwayatDonasi
 import com.example.aplikasidonasi.model.TempatDonasi
 import com.example.aplikasidonasi.model.User
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -22,7 +22,7 @@ interface ApiService {
     @POST("auth/login")
     suspend fun login(
         @Body login: Login
-    ): User
+    ): LoginResponse
 
     @POST("auth/register")
     suspend fun register(
@@ -47,8 +47,19 @@ interface ApiService {
         @Part bukti_transfer: MultipartBody.Part
     )
 
-    @GET("/riwayat")
+    @GET("riwayat")
     suspend fun getRiwayatDonasi(
         @Header("Authorization") token: String
     ): List<RiwayatDonasi>
+
+    @Multipart
+    @POST("admin/tempat-donasi")
+    suspend fun tambahTempatDonasi(
+        @Header("Authorization") token: String,
+        @Part("nama") nama: RequestBody,
+        @Part("deskripsi") deskripsi: RequestBody,
+        @Part("target") target: RequestBody,
+        @Part foto: MultipartBody.Part
+    )
+
 }

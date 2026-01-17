@@ -13,5 +13,8 @@ object PetaNavigasi {
     fun kirimDonasiRoute(id: Int) = "kirim_donasi/$id"
 
     const val RIWAYAT = "riwayat"
+
+    const val ADMIN_HOME = "admin_home"
+    const val ADMIN_TAMBAH_DONASI = "admin_tambah_donasi"
 }
 

@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -27,21 +28,13 @@ import com.example.aplikasidonasi.viewmodel.AuthViewModel
 @Composable
 fun HalamanRegister(
     authViewModel: AuthViewModel,
-    onRegisterSuccess: () -> Unit,
-    onBackToLogin: () -> Unit
+    onRegisterSuccess: () -> Unit
 ) {
     var nama by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val user by authViewModel.user.observeAsState()
-    val error by authViewModel.error.observeAsState()
-
-    LaunchedEffect(user) {
-        if (user != null) {
-            onRegisterSuccess()
-        }
-    }
+    val error by authViewModel.error.collectAsState()
 
     Column(
         modifier = Modifier
@@ -50,85 +43,51 @@ fun HalamanRegister(
         verticalArrangement = Arrangement.Center
     ) {
 
-        // Judul
-        Text(
-            text = "Buat Akun Baru",
-            style = MaterialTheme.typography.headlineMedium
-        )
+        Text("Register", style = MaterialTheme.typography.headlineSmall)
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(Modifier.height(16.dp))
 
-        Text(
-            text = "Silakan isi data di bawah ini",
-            style = MaterialTheme.typography.bodyMedium
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Nama
         OutlinedTextField(
             value = nama,
             onValueChange = { nama = it },
-            label = { Text("Nama Lengkap") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            label = { Text("Nama") },
+            modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(Modifier.height(8.dp))
 
-        // Email
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(Modifier.height(8.dp))
 
-        // Password
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
             visualTransformation = PasswordVisualTransformation()
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(Modifier.height(16.dp))
 
-        // Tombol Register
         Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
                 authViewModel.register(nama, email, password)
-            },
-            modifier = Modifier.fillMaxWidth()
+                onRegisterSuccess()
+            }
         ) {
             Text("Register")
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Error message
         error?.let {
-            Text(
-                text = it,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Kembali ke login
-        TextButton(
-            onClick = onBackToLogin,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Sudah punya akun? Login")
+            Spacer(Modifier.height(8.dp))
+            Text(it, color = MaterialTheme.colorScheme.error)
         }
     }
 }
-

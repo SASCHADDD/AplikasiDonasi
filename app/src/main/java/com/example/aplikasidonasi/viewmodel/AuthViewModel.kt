@@ -1,6 +1,5 @@
 package com.example.aplikasidonasi.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,35 +14,37 @@ class AuthViewModel(
     private val repository: AuthRepository
 ) : ViewModel() {
 
-    private val _user = MutableLiveData<User?>()
-    val user: LiveData<User?> = _user
-
     private val _token = MutableStateFlow<String?>(null)
     val token: StateFlow<String?> = _token
 
-    private val _error = MutableLiveData<String?>()
-    val error: LiveData<String?> = _error
+    private val _role = MutableStateFlow<String?>(null)
+    val role: StateFlow<String?> = _role
 
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
             try {
-                val result = repository.login(email, password)
-                _user.value = result
-                _token.value = result.token
-            } catch (_: retrofit2.HttpException) {
-                _error.value = "Email atau password salah"
+                val response = repository.login(email, password)
+
+                _token.value = response.token
+                _role.value = response.role   // ⬅️ INI KUNCINYA
+
             } catch (e: Exception) {
                 _error.value = e.message
             }
         }
     }
-
     fun register(nama: String, email: String, password: String) {
         viewModelScope.launch {
             try {
-                _user.value = repository.register(
-                    User(nama = nama, email = email, password = password)
+                repository.register(
+                    User(
+                        nama = nama,
+                        email = email,
+                        password = password
+                    )
                 )
             } catch (e: Exception) {
                 _error.value = e.message
